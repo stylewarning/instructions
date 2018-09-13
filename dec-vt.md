@@ -324,6 +324,7 @@ has a lot more to interpret).
 - A lot of key commands don't work (probably because the terminal doesn't know how to send them). For example:
   - `C-right` (works on VT520 w/above config), `C-)`
   - `C-_` (use `C-/` instead; it's also easier anyway!)
+- On the VT520 with DSR/DTR flow control, flow control seems to not work when in a `screen` session.
 
 
 # TODO ITEMS
