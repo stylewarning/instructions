@@ -160,7 +160,7 @@ Here we configure for 50x132
 * CRT Saver: `5 minutes`
 * Energy Saver: `5 minutes`
 
-## Terminal tyoe
+## Terminal type
 
 * Emulation mode: `VT520, ...`
 * Terminal ID to host: `VT520`
@@ -265,7 +265,13 @@ and in it put the following
 
 Note the string with `cu.usbserial-*`. Put whatever you got in there.
 
-The `std.19200` will be looked up in `/etc/gettytab`. If you have additional customization, put it there, but don't modify `std.19200`, just make a new entry.
+The `std.19200` will be looked up in `/etc/gettytab`. If you have additional customization, put it there, but don't modify `std.19200`, just make a new entry. I use this for the VT520.
+
+```
+# Serial over USB
+std.ttyUSB:\
+	:np:hw:mb:sp#115200:
+```
 
 Once you have this file (which you'll needed to have made as root)
 
@@ -291,6 +297,27 @@ source vt420.sh
 
 provided in this directory. This also sets the locale to ISO8859-1.
 
+We also provide a `vt520.sh`.
+
+To do this automatically upon login, add this to your `.bash_profile` (not `.bashrc`!):
+
+```
+export TTY=$(tty)
+if [ "$TTY" = "/dev/cu.usbserial-..."]; then
+  echo "Logging in from the USB serial port."
+  source /path/to/vt520.sh
+fi
+```
+
+# TMUX
+
+`tmux` by default is pretty noisy. I use the config `vt-tmux.conf` and I add the alias
+
+```
+alias vtmux="tmux -f /path/to/vt-tmux.conf"
+```
+
+to my `.bashrc`.
 
 # EMACS
 
