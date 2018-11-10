@@ -199,6 +199,9 @@ For Emacs usage, there are a good number of keys you'll want to define. You'll w
   * Shifted: `ESC[1;2B`
   * Control: `ESC[1;5B`
   * Shift Control: `ESC[1;6B`
+* Press `<delete>` (not backspace!)
+  * All: `ESC[3~`
+
 
 ## Communication
 
