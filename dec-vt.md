@@ -31,6 +31,11 @@ caps-lock key is sufficiently differentiated from the 'A' key.
 The situation with the 'alt' key is pretty dire. Don't expect to be
 using it.
 
+For the VT520, the state of affairs is vastly superior. The VT520
+supports some PS/2 keyboards, but requires configuration. I've found
+the IBM Model M `1391401` to work relatively well. On such a keyboard,
+to get into settings, type `<CAPSLOCK>+<PRINTSCREEN>`.
+
 # CONNECTING TO A MODERN COMPUTER
 
 I use an FDTI-drivered USB-to-serial cable, because the Mac has native
@@ -338,6 +343,35 @@ doing:
 
     (setq in-terminal (not window-system))
 
+
+## Getting Fonts & Shift+Arrow To Work
+
+When using Emacs with `tmux`, Emacs modifier keys Just Work. However,
+things like underlining do *not* work. The reason for this is that
+`tmux` by default sets `$TERM` to `screen`, which doesn't have the
+terminfo database entries for telling applications how to
+underline. (You can inspect the terminfo database entry by doing
+`infocmp -1 $TERM`.)
+
+However, if you set `TERM=vt520` before you run `emacs`, then modifier
+keys don't fully work (like `<S-right>`). You'll see this because the
+control keys error and insert garbage (e.g., `2C`) into the
+buffer. The reason is that Emacs has special handling of `screen`,
+which falls back to `xterm` initialization, which does a lot *within*
+Emacs to make the editing experience great. One such thing it does is
+add to the `input-decode-map` for recognizing and consequently
+handling these ANSI control sequences.
+
+To fix this, add to `term/vt520.el` the following lines:
+
+```
+(define-key input-decode-map "\e[1;2A" [S-up])
+(define-key input-decode-map "\e[1;2B" [S-down])
+(define-key input-decode-map "\e[1;2C" [S-right])
+(define-key input-decode-map "\e[1;2D" [S-left])
+```
+
+
 ## Emacs Tips
 
 Don't load any of the fancy color theme stuff you might have. That can
@@ -361,14 +395,19 @@ has a lot more to interpret).
 - - paredit, Shift-modifiers, etc.
 - TODO: Figure out the numpad on the LK400-series keyboard.
 
+
 # TROUBLESHOOTING
 
-The one hiccup I ran into following online tutorials was adding and using an entry from `/etc/gettytab`. I discovered from the `system.log` that the process was exiting with failure upon trying to launch `getty`. This is why, above, I've opted to just use a standard entry from `gettytab` instead of my own.
+The one hiccup I ran into following online tutorials was adding and
+using an entry from `/etc/gettytab`. I discovered from the
+`system.log` that the process was exiting with failure upon trying to
+launch `getty`. This is why, above, I've opted to just use a standard
+entry from `gettytab` instead of my own.
 
 
 # THANKS & RESOURCES
 
-Thanks to Toby Thain for the help.
+Thanks to Mark Skilbeck and Toby Thain for the help.
 
 These websites were useful:
 
@@ -386,4 +425,3 @@ These websites were useful:
 - https://lists.gnu.org/archive/html/emacs-devel/2004-09/msg00048.html
 - https://gist.github.com/albertfilice/0f12dc87f8d1ec02ef14
 - https://superuser.com/questions/1059744/serial-console-login-on-osx
-
