@@ -16,6 +16,7 @@ Here are the important differences:
 * The VT420 requires proprietary keyboards over a proprietary (but probably easily reverse-engineered) interface.
   * The VT520 uses PS/2 and with enough patience can be set up to use just about any standard PS/2 keyboard. (*Note*: I have not set up a non-DEC keyboard yet. Things like Fn keys require massaging.)
 * The VT520 can work at a blazing fast speed of 115.2K baud!
+* For hardware flow control to work, you need the latest [FTDI drivers](https://www.ftdichip.com/Drivers/VCP.htm). On macOS Catalina, you will need to make a security exception during installation. After installing, restart your computer.
 
 # THE KEYBOARD
 
